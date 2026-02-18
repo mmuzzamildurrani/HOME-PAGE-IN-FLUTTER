@@ -1,140 +1,137 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyPortfolio());
+  runApp(const MyWebsite());
 }
 
-class MyPortfolio extends StatelessWidget {
-  const MyPortfolio({super.key});
+class MyWebsite extends StatelessWidget {
+  const MyWebsite({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Muzzamil Portfolio",
-      theme: ThemeData(primarySwatch: Colors.indigo, fontFamily: "Arial"),
-      home: const MainScreen(),
+      home: HomePage(),
     );
   }
 }
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
+  final List<Widget> pages = const [
+    PortfolioBody(),
+    ProjectsSection(),
+    ContactSection(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Muzzamil Portfolio"),
-        centerTitle: true,
-        backgroundColor: Colors.indigo,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: const [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.indigo, Colors.blue]),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1607746882042-944635dfe10e",
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Muzzamil",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  Text(
-                    "Full Stack Developer",
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ],
-              ),
+      body: pages[selectedIndex],
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              spreadRadius: 5,
             ),
           ],
         ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: BottomNavigationBar(
+            currentIndex: selectedIndex,
+            onTap: (index) {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.indigo,
+            unselectedItemColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.work),
+                label: "Projects",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.contact_mail),
+                label: "Contact",
+              ),
+            ],
+          ),
+        ),
       ),
-      body: const PortfolioBody(),
     );
   }
 }
 
+/// Portfolio Body
 class PortfolioBody extends StatelessWidget {
   const PortfolioBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xff0f2027), Color(0xff203a43), Color(0xff2c5364)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: const [
-            SizedBox(height: 80),
-            HeroSection(),
-            SizedBox(height: 80),
-            SkillsSection(),
-            SizedBox(height: 80),
-            ProjectsSection(),
-            SizedBox(height: 80),
-            ContactSection(),
-            SizedBox(height: 80),
-          ],
-        ),
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(height: 80),
+          HeroSection(),
+          SizedBox(height: 80),
+          SkillsSection(),
+          SizedBox(height: 80),
+          TechImageSection(),
+          SizedBox(height: 80),
+          FooterSection(),
+        ],
       ),
     );
   }
 }
 
+/// Hero Section
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const Text(
-          "Hi, I'm Muzzamil 👋",
+      children: const [
+        Text(
+          "Hi, I'm Muzzamil",
           style: TextStyle(
-            fontSize: 42,
+            fontSize: 32,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
           ),
         ),
-        const SizedBox(height: 15),
-        const Text(
-          "Frontend | ASP.NET Core MVC | Flutter Developer",
-          style: TextStyle(fontSize: 20, color: Colors.white70),
-        ),
-        const SizedBox(height: 30),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.indigo,
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          onPressed: () {},
-          child: const Text("Download CV"),
+        SizedBox(height: 10),
+        Text(
+          "Flutter & ASP.NET Developer",
+          style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       ],
     );
   }
 }
 
+/// Skills Section
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
 
@@ -144,40 +141,18 @@ class SkillsSection extends StatelessWidget {
       children: [
         const Text(
           "My Skills",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
         Wrap(
+          spacing: 20,
+          runSpacing: 20,
           alignment: WrapAlignment.center,
-          spacing: 30,
-          runSpacing: 30,
           children: const [
-            SkillCard(
-              title: "Frontend",
-              description:
-                  "HTML, CSS, JavaScript\nResponsive Design\nModern UI/UX",
-              icon: Icons.web,
-            ),
-            SkillCard(
-              title: "ASP.NET Core MVC",
-              description:
-                  "REST APIs\nAuthentication\nEntity Framework\nSQL Server",
-              icon: Icons.storage,
-            ),
-            SkillCard(
-              title: "Flutter",
-              description: "Cross Platform Apps\nAnimations\nState Management",
-              icon: Icons.phone_android,
-            ),
-            SkillCard(
-              title: "Dart",
-              description: "OOP Programming\nAsync/Await\nApp Logic",
-              icon: Icons.code,
-            ),
+            SkillCard(title: "Flutter"),
+            SkillCard(title: "Dart"),
+            SkillCard(title: "ASP.NET"),
+            SkillCard(title: "C#"),
           ],
         ),
       ],
@@ -185,117 +160,190 @@ class SkillsSection extends StatelessWidget {
   }
 }
 
-class ProjectsSection extends StatelessWidget {
-  const ProjectsSection({super.key});
+class SkillCard extends StatelessWidget {
+  final String title;
+
+  const SkillCard({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tech Image Section
+class TechImageSection extends StatelessWidget {
+  const TechImageSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          "My Projects",
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        Image.network(
+          "https://flutter.dev/assets/homepage/carousel/slide_1-layer_0-7e5f6d.png",
+          height: 200,
         ),
         const SizedBox(height: 20),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 18),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: Text(
+            "I have learned modern technologies including Flutter for cross-platform app development and ASP.NET for powerful backend systems. "
+            "I focus on building responsive, scalable, and clean applications.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
-          onPressed: () {},
-          icon: const Icon(Icons.code),
-          label: const Text("Visit My GitHub"),
         ),
       ],
     );
   }
 }
 
+/// Projects Section Placeholder
+class ProjectsSection extends StatelessWidget {
+  const ProjectsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        "Projects Page",
+        style: TextStyle(fontSize: 24, color: Colors.black87),
+      ),
+    );
+  }
+}
+
+/// Contact Section Placeholder
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          "Contact Me",
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: 15),
-        Text(
-          "muzzamil@email.com",
-          style: TextStyle(fontSize: 18, color: Colors.white70),
-        ),
-      ],
+    return const Center(
+      child: Text(
+        "Contact Page",
+        style: TextStyle(fontSize: 24, color: Colors.black87),
+      ),
     );
   }
 }
 
-class SkillCard extends StatefulWidget {
-  final String title;
-  final String description;
-  final IconData icon;
-
-  const SkillCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
-
-  @override
-  State<SkillCard> createState() => _SkillCardState();
-}
-
-class _SkillCardState extends State<SkillCard> {
-  double scale = 1;
+/// Professional Footer
+class FooterSection extends StatelessWidget {
+  const FooterSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => scale = 1.07),
-      onExit: (_) => setState(() => scale = 1),
-      child: AnimatedScale(
-        scale: scale,
-        duration: const Duration(milliseconds: 200),
-        child: Container(
-          width: 280,
-          padding: const EdgeInsets.all(25),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white24),
-          ),
-          child: Column(
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xff0f172a),
+            Color(0xff1e293b),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          /// Top Footer Content
+          Wrap(
+            alignment: WrapAlignment.spaceEvenly,
+            runSpacing: 40,
             children: [
-              Icon(widget.icon, size: 50, color: Colors.white),
-              const SizedBox(height: 20),
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Muzzamil",
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      "Passionate Flutter & ASP.NET Developer focused on building modern, scalable and responsive applications.",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 15),
-              Text(
-                widget.description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white70),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Quick Links",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  SizedBox(height: 12),
+                  Text("Home", style: TextStyle(color: Colors.white70)),
+                  SizedBox(height: 6),
+                  Text("Projects", style: TextStyle(color: Colors.white70)),
+                  SizedBox(height: 6),
+                  Text("Contact", style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Contact",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  SizedBox(height: 12),
+                  Text("Email: muzzamil@email.com",
+                      style: TextStyle(color: Colors.white70)),
+                  SizedBox(height: 6),
+                  Text("Location: Pakistan",
+                      style: TextStyle(color: Colors.white70)),
+                ],
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 50),
+          const Divider(color: Colors.white24),
+          const SizedBox(height: 20),
+
+          /// Social Icons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.facebook, color: Colors.white70),
+              SizedBox(width: 20),
+              Icon(Icons.linked_camera, color: Colors.white70),
+              SizedBox(width: 20),
+              Icon(Icons.code, color: Colors.white70),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          /// Copyright
+          const Text(
+            "© 2026 Muzzamil. All Rights Reserved.",
+            style: TextStyle(color: Colors.white54),
+          ),
+        ],
       ),
     );
   }
